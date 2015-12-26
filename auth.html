@@ -1,0 +1,10 @@
+<div ng-show="!authorized">
+  <span>Authorize access to Gmail API</span>
+  <!--Button for the user to click to initiate auth sequence -->
+  <button ng-click="handleAuthClick()">
+    Authorize
+  </button>
+</div>
+<div ng-show="authorized">
+  <a ui-sref="notes">Notes</a>
+</div>
