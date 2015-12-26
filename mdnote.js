@@ -15,7 +15,11 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider
 	.state('auth', {
 		url: "/",
-		templateUrl: "auth.html"
+		templateUrl: "auth.html",
+		controller: function($scope, $state) {
+			// We are authenticated.. forward to /notes
+			$state.go('notes');
+		}
 	})
 	.state('notes', {
 		url: "/notes",

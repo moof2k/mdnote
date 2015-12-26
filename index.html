@@ -50,6 +50,14 @@
       </div>
     </nav>
 
+    <div class="container" ng-if="!authorized">
+      <span>Authorize access to Gmail API</span>
+      <!--Button for the user to click to initiate auth sequence -->
+      <button ng-click="handleAuthClick()">
+        Authorize
+      </button>
+    </div>
+
     <div class="container" ng-if="authorized">
       <div ui-view></div>
     </div><!-- /.container -->
