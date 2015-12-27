@@ -13,18 +13,33 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise("/");
 
 	$stateProvider
-	.state('auth', {
+	.state('init', {
 		url: "/",
-		templateUrl: "auth.html",
-		controller: function($scope, $state) {
-			// We are authenticated.. forward to /notes
-			$state.go('notes');
-		}
+		views: {
+			"notes": {
+				template: "init notes",
+				controller: function($scope, $state) {
+					console.log('init notes controller');
+					$state.go('notes');
+				}
+			},
+			"note": {
+				template: "init note"
+			}
+		},
 	})
 	.state('notes', {
-		url: "/notes",
-		templateUrl: "notes.html",
-		controller: 'NotesController'
+		url: "/notes/:id",
+		views: {
+			"notes": {
+				templateUrl: "notes.html",
+				controller: 'NotesController'
+			},
+			"note": {
+				templateUrl: "note.html",
+				controller: 'NoteController'
+			}
+		},
 	});
 });
 
@@ -61,7 +76,7 @@ MyApp.controller('AuthController', function($scope, $state, $window) {
 
 
 MyApp.controller('NotesController', function($scope) {
-	$scope.notes = {};
+	$scope.notes = [];
     $scope.note = {
     	'model': "foo",
     	'editable': true,
@@ -70,10 +85,11 @@ MyApp.controller('NotesController', function($scope) {
 
     function addNote(messageId, messageTimestamp, messageSnippet) {
     	console.log(messageSnippet);
-    	$scope.notes[messageId] = {
+    	$scope.notes.push({
+    		'id': messageId,
     		'time': new Date(parseInt(messageTimestamp)),
     		'snippet': messageSnippet
-    	};
+    	});
     }
 
 	$scope.dateToDisplayDateString = function(date) {
@@ -148,5 +164,24 @@ MyApp.controller('NotesController', function($scope) {
     	$scope.$evalAsync(refreshNotes());
     }
 
+    console.log('NotesController');
     gapi.client.load('gmail', 'v1', onGmailLoaded);
 });
+
+
+MyApp.controller('NoteController', function($scope) {
+    $scope.note = {
+    	'model': "foo",
+    	'editable': true,
+    	'id': 0
+    };
+
+    function onGmailLoaded() {
+    	console.log('onGmailLoaded Note');
+    }
+
+    console.log('NoteController');
+    gapi.client.load('gmail', 'v1', onGmailLoaded);
+});
+
+
