@@ -7,7 +7,7 @@ function onGapiLoaded() {
 var CLIENT_ID = '468212145523-8qedsjk185kkrobrstgtroqqs6oufjbl.apps.googleusercontent.com';
 var SCOPES = ['https://www.googleapis.com/auth/gmail.modify'];
 
-var MyApp = angular.module('MyApp', ['ui.router', 'moof2k.wysimd']);
+var MyApp = angular.module('MyApp', ['ui.router', 'ui.bootstrap.buttons', 'moof2k.wysimd']);
 
 MyApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/");
@@ -29,6 +29,18 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
         },
     })
     .state('notes', {
+        url: "/notes",
+        views: {
+            "notes": {
+                templateUrl: "notes.html",
+                controller: 'NotesController'
+            },
+            "note": {
+                template: "No note selected"
+            }
+        },
+    })
+    .state('note', {
         url: "/notes/:draftId",
         views: {
             "notes": {
@@ -187,6 +199,8 @@ MyApp.controller('NoteController', function($scope, $stateParams) {
         'id': 0
     };
 
+    $scope.note_control = {};
+    $scope.editmode = 'right';
     $scope.note_data = "";
 
     function getDraft() {

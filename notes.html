@@ -1,5 +1,5 @@
 
 <div ng-repeat="note in notes">
-  <li><a ui-sref="notes({draftId: note.draftId})">{{note.snippet}}</a> {{dateToDisplayDateString(note.time)}}</li>
+  <li><a ui-sref="note({draftId: note.draftId})">{{note.snippet}}</a> {{dateToDisplayDateString(note.time)}}</li>
 </div>
 

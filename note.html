@@ -1,6 +1,63 @@
 
-<textarea ng-model="note_data">
-here's a note
-</textarea>
 
-<button ng-click="updateDraft()">Save</button>
+<div class="navbar navbar-default" ng-show="editmode != 'view'">
+    <div class="btn-group" dropdown is-open="status.isopen">
+        <button type="button" class="btn btn-default dropdown-toggle navbar-btn" dropdown-toggle>
+        {{toolbarModel.section}} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu editable-html" role="menu">
+        <li><a href="#" ng-click="note_control.format('p')"><p>Paragraph</p></a></li>
+        <li><a href="#" ng-click="note_control.format('h1')"><h1>Heading 1</h1></a></li>
+        <li><a href="#" ng-click="note_control.format('h2')"><h2>Heading 2</h2></a></li>
+        <li><a href="#" ng-click="note_control.format('blockquote')"><blockquote>Blockquote</blockquote></a></li>
+        <li><a href="#" ng-click="note_control.format('pre')"><pre>Codeblock</pre></a></li>
+        </ul>
+    </div>
+    <div class="btn-group">
+        <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.bold()" aria-label="Bold"><i class="fa fa-bold"></i></label>
+        <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.italic()" aria-label="Italic"><i class="fa fa-italic"></i></label>
+    </div>
+    <div class="btn-group">
+        <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.unordered_list()" aria-label="Bullet List">
+            <i class="fa fa-list-ul"></i></label>
+        <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.ordered_list()" aria-label="Italic">
+            <i class="fa fa-list-ol"></i></label>
+    </div>
+    <div class="btn-group pull-right">
+        <button type="button" class="btn btn-default navbar-btn" ng-click="updateDraft()">Save</button>
+    </div>
+    <div class="btn-group pull-right navbar-collapse collapse">
+        <a class="btn btn-default btn-s navbar-btn" ng-model="editmode" uib-btn-radio="'left'"><i class="fa fa-file-code-o"></i></a>
+        <label class="btn btn-default btn-s navbar-btn" ng-model="editmode" uib-btn-radio="'both'"><i class="fa fa-file-code-o"></i><i class="fa fa-file-text-o"></i></label>
+        <label class="btn btn-default btn-s navbar-btn" ng-model="editmode" uib-btn-radio="'right'"><i class="fa fa-file-text-o"></i></label>
+    </div>
+</div>
+
+<div class="">
+<div class="row" ng-show="editmode != 'both'">
+    <div class="col-md-12" ng-show="editmode == 'left'" id="editable_singleleft">
+        <div id="editable_md">
+            <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="userContent"></ui-codemirror>
+        </div>
+    </div>
+    <div class="col-md-12" ng-show="editmode == 'right' || editmode == 'view'" id="editable_singleright">
+        <wysimd ng-model="note_data" control="note_control" contenteditable="{{editmode != 'view'}}">
+            <center>
+                <br><br><br><br>
+            <i class="fa fa-refresh fa-spin fa-5x"></i>
+            <br><br><br><br>
+            </center>
+        </wysimd>
+    </div>
+</div>
+</div>
+
+
+<div ui-layout="{flow : 'column'}" ng-show="editmode == 'both'" style="top: 50px;">
+    <div ui-layout-container id="editable_bothleft">
+
+    </div>
+    <div ui-layout-container id="editable_bothright">
+
+    </div>
+</div>

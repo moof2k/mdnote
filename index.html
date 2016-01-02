@@ -8,6 +8,8 @@
     <title>mdnote</title>
 
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="bower_components/angular-ui-layout/src/ui-layout.css" rel="stylesheet">
 
     <style>
 
@@ -134,6 +136,8 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-ui-layout/src/ui-layout.js"></script>
+    <script src="bower_components/angular-ui-bootstrap/src/buttons/buttons.js"></script>
     <script src="bower_components/rangy/rangy-core.js"></script>
     <script src="bower_components/wysimd/markdown.js"></script>
     <script src="bower_components/wysimd/wysimd.js"></script>
@@ -144,7 +148,7 @@
 
 <body ng-controller="AuthController">
 
-    <div id="wrapper">
+    <div class="container" id="wrapper">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
@@ -163,25 +167,18 @@
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
+      
+          <div ng-if="!authorized">
+            <span>Authorize access to Gmail API</span>
+            <!--Button for the user to click to initiate auth sequence -->
+            <button ng-click="handleAuthClick()">
+              Authorize
+            </button>
+          </div>
 
-                        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
-                    
-                        <div ng-if="!authorized">
-                          <span>Authorize access to Gmail API</span>
-                          <!--Button for the user to click to initiate auth sequence -->
-                          <button ng-click="handleAuthClick()">
-                            Authorize
-                          </button>
-                        </div>
+          <div ng-if="authorized" ui-view="note"></div>
 
-                        <div ng-if="authorized" ui-view="note"></div>
-                        
-                    </div>
-                </div>
-            </div>
+          <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
         </div>
         <!-- /#page-content-wrapper -->
 
