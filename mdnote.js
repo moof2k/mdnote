@@ -203,6 +203,23 @@ MyApp.controller('NoteController', function($scope, $stateParams) {
     $scope.editmode = 'right';
     $scope.note_data = "";
 
+    // Retrieves the message body as plain text from the draft response
+    function getNoteBody(messagePayload) {
+        var body = {};
+
+        if (messagePayload.mimeType == "multipart/alternative") {
+            for (i = 0; i < messagePayload.parts.length; i++) {
+                if (messagePayload.parts[i].mimeType == "text/plain") {
+                    body = messagePayload.parts[i].body;
+                }
+            }
+        } else {
+            body = messagePayload.body;
+        }
+
+        return atob(body.data);
+    }
+
     function getDraft() {
         var request = gapi.client.gmail.users.drafts.get({
             'userId': 'me',
@@ -211,7 +228,7 @@ MyApp.controller('NoteController', function($scope, $stateParams) {
 
         request.execute(function(resp) {
             console.log(resp);
-            $scope.note_data = atob(resp.message.payload.body.data);
+            $scope.note_data = getNoteBody(resp.message.payload);
         });
     }
 
