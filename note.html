@@ -2,15 +2,15 @@
 
 <div class="navbar navbar-default" ng-show="editmode != 'view'">
     <div class="btn-group" dropdown is-open="status.isopen">
-        <button type="button" class="btn btn-default dropdown-toggle navbar-btn" dropdown-toggle>
-        {{toolbarModel.section}} <span class="caret"></span>
+        <button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown">
+        Paragraph <span class="caret"></span>
         </button>
         <ul class="dropdown-menu editable-html" role="menu">
-        <li><a href="#" ng-click="note_control.format('p')"><p>Paragraph</p></a></li>
-        <li><a href="#" ng-click="note_control.format('h1')"><h1>Heading 1</h1></a></li>
-        <li><a href="#" ng-click="note_control.format('h2')"><h2>Heading 2</h2></a></li>
-        <li><a href="#" ng-click="note_control.format('blockquote')"><blockquote>Blockquote</blockquote></a></li>
-        <li><a href="#" ng-click="note_control.format('pre')"><pre>Codeblock</pre></a></li>
+        <li><a href="" ng-click="note_control.format('p')"><p>Paragraph</p></a></li>
+        <li><a href="" ng-click="note_control.format('h1')"><h1>Heading 1</h1></a></li>
+        <li><a href="" ng-click="note_control.format('h2')"><h2>Heading 2</h2></a></li>
+        <li><a href="" ng-click="note_control.format('blockquote')"><blockquote>Blockquote</blockquote></a></li>
+        <li><a href="" ng-click="note_control.format('pre')"><pre>Codeblock</pre></a></li>
         </ul>
     </div>
     <div class="btn-group">
