@@ -36,17 +36,19 @@
 <div class="row" ng-show="editmode != 'both'">
     <div class="col-md-12" ng-show="editmode == 'left'" id="editable_singleleft">
         <div id="editable_md">
-            <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="userContent"></ui-codemirror>
+            <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="note_data"></ui-codemirror>
         </div>
     </div>
     <div class="col-md-12" ng-show="editmode == 'right' || editmode == 'view'" id="editable_singleright">
-        <wysimd ng-model="note_data" control="note_control" contenteditable="{{editmode != 'view'}}">
-            <center>
+        <div id="editable_html">
+            <wysimd ng-model="note_data" control="note_control" contenteditable="{{editmode != 'view'}}">
+                <center>
+                    <br><br><br><br>
+                <i class="fa fa-refresh fa-spin fa-5x"></i>
                 <br><br><br><br>
-            <i class="fa fa-refresh fa-spin fa-5x"></i>
-            <br><br><br><br>
-            </center>
-        </wysimd>
+                </center>
+            </wysimd>
+        </div>
     </div>
 </div>
 

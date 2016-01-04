@@ -163,7 +163,7 @@ var GmailInterface = {
     }
 };
 
-var MyApp = angular.module('MyApp', ['ui.router', 'ui.bootstrap.buttons', 'moof2k.wysimd']);
+var MyApp = angular.module('MyApp', ['ui.router', 'ui.bootstrap.buttons', 'ui.layout', 'ui.codemirror', 'moof2k.wysimd']);
 
 MyApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/");
@@ -211,13 +211,14 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
     });
 });
 
-MyApp.controller('AuthController', function($scope, $state, $window) {
+MyApp.controller('AuthController', function($scope, $state, $window, $timeout) {
     $scope.authorized = false;
     $scope.notesLabelId = undefined;
 
     function isAuthorized(a) {
-        $scope.authorized = a;
-        $scope.$apply();
+        $timeout(function() {
+            $scope.authorized = a;
+        });
     }
 
     $window.init = function() {
@@ -284,6 +285,13 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
         'id': 0
     };
 
+    $scope.editorOptions = {
+        lineWrapping : true,
+        lineNumbers: true,
+        viewportMargin: Infinity,
+        theme: "xq-light"
+    };
+
     $scope.note_control = {};
     $scope.editmode = 'right';
     $scope.note_data = "";
@@ -297,6 +305,22 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
     $scope.updateDraft = function() {
         GmailInterface.updateDraft($stateParams.draftId, $scope.note_data);
     };
+
+    $scope.$watch('editmode', function() {
+
+        if($scope.editmode == "both") {
+            document.getElementById('editable_bothleft').appendChild(document.getElementById('editable_md'));
+            document.getElementById('editable_bothright').appendChild(document.getElementById('editable_html'));
+        } else {
+            document.getElementById('editable_singleleft').appendChild(document.getElementById('editable_md'));
+            document.getElementById('editable_singleright').appendChild(document.getElementById('editable_html'));
+        }
+
+        // The CodeMirror doesn't refresh automatically, set a timeout to refresh it.
+        $timeout(function() {
+            window.dispatchEvent(new Event('resize'));
+        }, 200);
+    });
 
     if (!window.location.hash.endsWith("/test")) {
         GmailInterface.getDraft($stateParams.draftId, setNote);
