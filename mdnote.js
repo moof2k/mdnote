@@ -15,7 +15,6 @@ var GmailInterface = {
             'scope': SCOPES.join(' '),
             'immediate': true
         }, function(authResult) {
-            console.log(authResult);
             if (authResult && !authResult.error) {
                 // load gmail client interface, then trigger callback
                 gapi.client.load('gmail', 'v1', function() {
@@ -144,7 +143,22 @@ var GmailInterface = {
         });
 
         request.execute(function(resp) {
-            console.log(resp);
+            var messageId = resp.message.id;
+            GmailInterface.setMessageLabel(messageId);
+        });
+    },
+
+    setMessageLabel: function(messageId) {
+        // Get the labelId for Notes
+        GmailInterface.getNotesLabelId(function(notesLabelId) {
+            var request = gapi.client.gmail.users.messages.modify({
+                'userId': 'me',
+                'id': messageId,
+                'addLabelIds': [notesLabelId]
+            });
+
+            request.execute(function(resp) {
+            });
         });
     }
 };
@@ -283,8 +297,6 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
     $scope.updateDraft = function() {
         GmailInterface.updateDraft($stateParams.draftId, $scope.note_data);
     };
-
-    console.log('NoteController');
 
     if (!window.location.hash.endsWith("/test")) {
         GmailInterface.getDraft($stateParams.draftId, setNote);
