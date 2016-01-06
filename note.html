@@ -1,6 +1,6 @@
 
 
-<div class="navbar navbar-default" ng-show="editmode != 'view'">
+<div class="navbar navbar-default">
     <div class="btn-group" dropdown is-open="status.isopen">
         <button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown">
         Paragraph <span class="caret"></span>
@@ -34,12 +34,12 @@
 </div>
 
 <div class="editarea">
-    <div ng-class="editmode == 'both' ? 'leftedit' : ''" ng-show="editmode == 'left' || editmode == 'both'">
+    <div class="leftedit" ng-class="editmode == 'both' ? 'halfwidth' : ''" ng-show="editmode == 'left' || editmode == 'both'">
         <div id="editable_md">
             <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="note_data"></ui-codemirror>
         </div>
     </div>
-    <div ng-class="editmode == 'both' ? 'rightedit' : ''" ng-show="editmode == 'right' || editmode == 'both'">
+    <div class="rightedit" ng-class="editmode == 'both' ? 'halfwidth' : ''" ng-show="editmode == 'right' || editmode == 'both'">
         <div id="editable_html">
             <wysimd ng-model="note_data" control="note_control" contenteditable="{{editmode != 'view'}}">
                 <center>

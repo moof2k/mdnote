@@ -17,16 +17,32 @@
         margin-bottom: 0px;
       }
 
+      .leftmain {
+        width: 250px;
+        float: left;
+      }
+
+      .notesdisplay {
+        overflow-y: scroll;
+        height: calc(100vh - 65px);
+      }
+
+      .rightmain {
+        width: calc(100vw - 265px);
+        float: right;
+      }
+
+      .halfwidth {
+        width: 50%;
+      }
+
       .leftedit {
         float: left;
-        width: 50%;
         overflow-y: scroll;
         height: calc(100vh - 65px);
       }
 
       .rightedit {
-        float: right;
-        width: 50%;
         overflow-y: scroll;
         height: calc(100vh - 65px);
       }
@@ -170,44 +186,26 @@
 
 <body ng-controller="AuthController">
 
-    <div class="container" id="wrapper">
-
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="#">
-                        mdnote
-                    </a>
-                </li>
-                
-                <div ng-if="authorized" ui-view="notes"></div>
-                
-<a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
-
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-      
-          <div ng-if="!authorized">
-            <span>Authorize access to Gmail API</span>
-            <!--Button for the user to click to initiate auth sequence -->
-            <button ng-click="handleAuthClick()">
-              Authorize
-            </button>
-          </div>
-
-          
-          
-        </div>
-        <!-- /#page-content-wrapper -->
-
+    <div ng-if="!authorized">
+      <span>Authorize access to Gmail API</span>
+      <!--Button for the user to click to initiate auth sequence -->
+      <button ng-click="handleAuthClick()">
+        Authorize
+      </button>
     </div>
-    <!-- /#wrapper -->
 
-    <div ng-if="authorized" ui-view="note"></div>
+    <div class="leftmain">
+      <div class="navbar navbar-default">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">mdnote</a>
+          </div>
+      </div>
+      <div ng-if="authorized" ui-view="notes"></div>
+    </div>
+
+    <div class="rightmain">
+      <div ng-if="authorized" ui-view="note"></div>
+    </div>
 
     <div ng-show="error" ui-view="error"></div>
 
