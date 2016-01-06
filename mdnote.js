@@ -27,6 +27,18 @@ var GmailInterface = {
         });
     },
 
+    // Base64 decode.
+    decode: function(str) {
+        str = atob(str);
+        return str;
+    },
+
+    // Base64 encode and make URL-friendly.
+    encode: function(str) {
+        str = btoa(str);
+        return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
+    },
+
     getNotesLabelId: function(callback) {
         if (GmailInterface.notesLabelId === undefined) {
             GmailInterface.loadNotesLabelId(callback);
@@ -114,7 +126,7 @@ var GmailInterface = {
             body = messagePayload.body;
         }
 
-        return atob(body.data);
+        return GmailInterface.decode(body.data);
     },
 
     // Retrieves the draft content from Gmail
@@ -130,8 +142,8 @@ var GmailInterface = {
         });
     },
 
-    updateDraft: function(draftId, content) {
-        var draft_encoded = btoa("Subject: \r\n\r\n" + content);
+    updateDraft: function(draftId, content, errorcb) {
+        var draft_encoded = GmailInterface.encode("Subject: \r\n\r\n" + content);
         var request = gapi.client.gmail.users.drafts.update({
             'userId': 'me',
             'id': draftId,
@@ -143,6 +155,11 @@ var GmailInterface = {
         });
 
         request.execute(function(resp) {
+            if (resp.error) {
+                console.log(resp);
+                errorcb("Unable to update draft. Received error communicating with Gmail.");
+            }
+
             var messageId = resp.message.id;
             GmailInterface.setMessageLabel(messageId);
         });
@@ -172,6 +189,10 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
     .state('init', {
         url: "/",
         views: {
+            "error": {
+                templateUrl: "error.html",
+                controller: "ErrorController"
+            },
             "notes": {
                 template: "init notes",
                 controller: function($scope, $state) {
@@ -187,6 +208,10 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
     .state('notes', {
         url: "/notes",
         views: {
+            "error": {
+                templateUrl: "error.html",
+                controller: "ErrorController"
+            },
             "notes": {
                 templateUrl: "notes.html",
                 controller: 'NotesController'
@@ -199,6 +224,10 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
     .state('note', {
         url: "/notes/:draftId",
         views: {
+            "error": {
+                templateUrl: "error.html",
+                controller: "ErrorController"
+            },
             "notes": {
                 templateUrl: "notes.html",
                 controller: 'NotesController'
@@ -214,6 +243,7 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
 MyApp.controller('AuthController', function($scope, $state, $window, $timeout) {
     $scope.authorized = false;
     $scope.notesLabelId = undefined;
+    $scope.error = false;
 
     function isAuthorized(a) {
         $timeout(function() {
@@ -228,6 +258,16 @@ MyApp.controller('AuthController', function($scope, $state, $window, $timeout) {
     if (window.location.hash.endsWith("/test")) {
         $scope.authorized = true;
     }
+
+    $scope.displayError = function(message) {
+        $timeout(function() {
+            $scope.error = message;
+        });
+    };
+
+});
+
+MyApp.controller('ErrorController', function($scope, $timeout) {
 
 });
 
@@ -303,7 +343,7 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
     }
 
     $scope.updateDraft = function() {
-        GmailInterface.updateDraft($stateParams.draftId, $scope.note_data);
+        GmailInterface.updateDraft($stateParams.draftId, $scope.note_data, $scope.displayError);
     };
 
     $scope.$watch('editmode', function() {

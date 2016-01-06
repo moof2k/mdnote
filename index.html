@@ -167,6 +167,7 @@
                 
                 <div ng-if="authorized" ui-view="notes"></div>
                 
+<a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -182,14 +183,17 @@
             </button>
           </div>
 
-          <div ng-if="authorized" ui-view="note"></div>
-
-          <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+          
+          
         </div>
         <!-- /#page-content-wrapper -->
 
     </div>
     <!-- /#wrapper -->
+
+    <div ng-if="authorized" ui-view="note"></div>
+
+    <div ng-show="error" ui-view="error"></div>
 
     <!-- Menu Toggle Script -->
     <script>
