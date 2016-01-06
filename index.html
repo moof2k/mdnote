@@ -26,6 +26,8 @@
       .notesdisplay {
         overflow-y: auto;
         height: calc(100vh - 65px);
+
+        font-family: Georgia, serif;
       }
 
       .rightmain {
@@ -65,6 +67,28 @@
           width: 100% !important;
           height: 100% !important;
       }
+
+      wysimd {
+        font-family: Georgia, serif;
+        font-size: 16px;
+        outline: 0 none;
+      }
+
+      wysimd:hover {
+        outline: 0 none;
+      }
+
+      wysimd table:hover {
+        outline: 1px solid;
+      }
+
+      wysimd td {
+        padding: 3px;
+      }
+
+      wysimd th {
+        padding: 3px;
+      }
     </style>
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -93,7 +117,7 @@
     </div>
 
     <div class="leftmain">
-      <div class="navbar navbar-default">
+      <div class="navbar">
           <div class="navbar-header">
             <a class="navbar-brand" href="#">mdnote</a>
           </div>
