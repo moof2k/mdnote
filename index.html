@@ -9,10 +9,27 @@
 
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="bower_components/angular-ui-layout/src/ui-layout.css" rel="stylesheet">
     <link href="bower_components/codemirror/lib/codemirror.css" rel="stylesheet">
 
     <style>
+
+      .navbar {
+        margin-bottom: 0px;
+      }
+
+      .leftedit {
+        float: left;
+        width: 50%;
+        overflow-y: scroll;
+        height: calc(100vh - 65px);
+      }
+
+      .rightedit {
+        float: right;
+        width: 50%;
+        overflow-y: scroll;
+        height: calc(100vh - 65px);
+      }
 
       #wrapper {
           padding-left: 0;
@@ -141,7 +158,6 @@
     <script src="bower_components/codemirror/lib/codemirror.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/angular-ui-layout/src/ui-layout.js"></script>
     <script src="bower_components/angular-ui-codemirror/ui-codemirror.min.js"></script>
     <script src="bower_components/angular-ui-bootstrap/src/buttons/buttons.js"></script>
     <script src="bower_components/rangy/rangy-core.js"></script>

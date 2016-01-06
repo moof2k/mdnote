@@ -180,7 +180,7 @@ var GmailInterface = {
     }
 };
 
-var MyApp = angular.module('MyApp', ['ui.router', 'ui.bootstrap.buttons', 'ui.layout', 'ui.codemirror', 'moof2k.wysimd']);
+var MyApp = angular.module('MyApp', ['ui.router', 'ui.bootstrap.buttons', 'ui.codemirror', 'moof2k.wysimd']);
 
 MyApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/");
@@ -347,14 +347,6 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
     };
 
     $scope.$watch('editmode', function() {
-
-        if($scope.editmode == "both") {
-            document.getElementById('editable_bothleft').appendChild(document.getElementById('editable_md'));
-            document.getElementById('editable_bothright').appendChild(document.getElementById('editable_html'));
-        } else {
-            document.getElementById('editable_singleleft').appendChild(document.getElementById('editable_md'));
-            document.getElementById('editable_singleright').appendChild(document.getElementById('editable_html'));
-        }
 
         // The CodeMirror doesn't refresh automatically, set a timeout to refresh it.
         $timeout(function() {
