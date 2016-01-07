@@ -307,7 +307,7 @@ MyApp.controller('NotesController', function($scope, $timeout) {
         if (interval > 1) {
             return interval + " minutes ago ";
         }
-        return Math.floor(seconds) + " seconds ago";
+        return "just a moment ago";
     };
 
     if (!window.location.hash.endsWith("/test")) {

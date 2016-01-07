@@ -1,6 +1,6 @@
 
 <div class="notesdisplay">
-<div class="notesummary" ng-repeat="note in notes">
+<div class="notesummary" ng-repeat="note in notes | orderBy:'-time'">
   <a ui-sref="note({draftId: note.draftId})">{{note.snippet}}</a>
   <div class="notetime">{{dateToDisplayDateString(note.time)}}</div>
 </div>
