@@ -35,12 +35,12 @@
 
 <div class="editarea">
     <div class="leftedit" ng-class="editmode == 'both' ? 'halfwidth' : ''" ng-show="editmode == 'left' || editmode == 'both'">
-        <div id="editable_md">
+        <div class="md_container">
             <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="note_data"></ui-codemirror>
         </div>
     </div>
     <div class="rightedit" ng-class="editmode == 'both' ? 'halfwidth' : ''" ng-show="editmode == 'right' || editmode == 'both'">
-        <div id="editable_html">
+        <div class="wysimd_container">
             <wysimd ng-model="note_data" control="note_control" contenteditable="{{editmode != 'view'}}">
                 <center>
                     <br><br><br><br>
