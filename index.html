@@ -18,6 +18,10 @@
         padding-right: 15px;
       }
 
+      .btn {
+        border: 0px;
+      }
+
       .leftmain {
         width: 0px;
         float: left;
@@ -135,7 +139,7 @@
       <div class="navbar">
           <div class="navbar-header">
             <a class="navbar-brand" href="#">mdnote</a>
-            <button ng-show="authorized" type="button" class="btn btn-default navbar-btn" ng-click="newNote()">+</button>
+            <button ng-show="authorized" type="button" class="btn btn-default navbar-btn" ng-click="newNote()"><i class="fa fa-plus-circle"></i></button>
           </div>
       </div>
       <div ng-if="authorized" ui-view="notes"></div>
