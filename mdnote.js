@@ -8,12 +8,12 @@ var CLIENT_ID = '468212145523-8qedsjk185kkrobrstgtroqqs6oufjbl.apps.googleuserco
 var SCOPES = ['https://www.googleapis.com/auth/gmail.modify'];
 
 var GmailInterface = {
-    authorize: function(callback) {
+    authorize: function(immediate, callback) {
         // invoke gmail authorization function
         gapi.auth.authorize({
             'client_id': CLIENT_ID,
             'scope': SCOPES.join(' '),
-            'immediate': true
+            'immediate': immediate
         }, function(authResult) {
             if (authResult && !authResult.error) {
                 // load gmail client interface, then trigger callback
@@ -275,23 +275,30 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
 });
 
 MyApp.controller('AuthController', function($scope, $state, $window, $timeout) {
-    $scope.authorized = false;
+    $scope.authorized = undefined;
     $scope.notesLabelId = undefined;
     $scope.error = false;
 
     function isAuthorized(a) {
+        if (a === false) {
+            $scope.displayError('Unable to access Gmail; not authorized');
+        }
         $timeout(function() {
             $scope.authorized = a;
         });
     }
 
     $window.init = function() {
-        GmailInterface.authorize(isAuthorized);
+        GmailInterface.authorize(true, isAuthorized);
     };
 
     if (window.location.hash.endsWith("/test")) {
         $scope.authorized = true;
     }
+
+    $scope.handleAuthClick = function() {
+        GmailInterface.authorize(false, isAuthorized);
+    };
 
     $scope.displayError = function(message) {
         $timeout(function() {
@@ -380,7 +387,7 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
 
     $scope.note_control = {};
     $scope.editmode = 'right';
-    $scope.note_data = "";
+    $scope.note_data = undefined;
 
     function setNote(noteData) {
         $timeout(function() {

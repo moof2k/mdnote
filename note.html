@@ -32,6 +32,13 @@
 </div>
 
 <div class="editarea">
+    <div ng-if="note_data === undefined">
+    <center>
+      <br><br><br><br>
+      <i style="margin: auto;" class="fa fa-refresh fa-spin fa-5x"></i>
+    </center>
+    </div>
+
     <div class="leftedit" ng-class="editmode == 'both' ? 'halfwidth' : ''" ng-show="editmode == 'left' || editmode == 'both'">
         <div class="md_container">
             <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="note_data"></ui-codemirror>

@@ -131,14 +131,6 @@
 
 <body ng-controller="AuthController">
 
-    <div ng-if="!authorized">
-      <span>Authorize access to Gmail API</span>
-      <!--Button for the user to click to initiate auth sequence -->
-      <button ng-click="handleAuthClick()">
-        Authorize
-      </button>
-    </div>
-
     <div class="leftmain">
       <div class="navbar">
           <div class="navbar-header">
@@ -151,6 +143,21 @@
 
     <div class="rightmain">
       <div ng-if="authorized" ui-view="note"></div>
+
+      <div ng-if="authorized === undefined">
+        <center>
+          <br><br><br><br>
+          <i style="margin: auto;" class="fa fa-refresh fa-spin fa-5x"></i>
+        </center>
+      </div>
+
+      <div ng-if="authorized === false">
+        mdnote requires access to your Gmail account to store note data. To authorize mdnote as a Gmail application, click the Authorize button below.
+        <br><br>
+        <button ng-click="handleAuthClick()">
+          Authorize
+        </button>
+      </div>
     </div>
 
     <div ng-show="error" ui-view="error"></div>
