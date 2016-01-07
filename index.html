@@ -29,9 +29,13 @@
       }
 
       .notesdisplay {
-        overflow-y: auto;
+        overflow-y: hidden;
         height: calc(100vh - 65px);
         font-family: Georgia, serif;
+      }
+
+      .notesdisplay:hover {
+        overflow-y: auto;
       }
 
       .notesummary {
