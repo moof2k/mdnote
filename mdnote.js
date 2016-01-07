@@ -130,26 +130,58 @@ var GmailInterface = {
     },
 
     // Retrieves the draft content from Gmail
-    getDraft: function(draftId, callback) {
+    getDraft: function(draftId, successcb, errorcb) {
         var request = gapi.client.gmail.users.drafts.get({
             'userId': 'me',
             'id': draftId
         });
 
         request.execute(function(resp) {
+            if (resp.error) {
+                console.log(resp);
+                errorcb("Unable to get draft. Received error communicating with Gmail.");
+                return;
+            }
+
             var draft_decoded = GmailInterface.getDraftBody(resp.message.payload);
-            callback(draft_decoded);
+            successcb(draft_decoded);
         });
     },
 
-    updateDraft: function(draftId, content, errorcb) {
+    createDraft: function(content, successcb, errorcb) {
+        var draft_encoded = GmailInterface.encode("Subject: \r\n\r\n" + content);
+        var request = gapi.client.gmail.users.drafts.create({
+            'userId': 'me',
+            'message': {
+                'raw': draft_encoded
+            }
+        });
+
+        request.execute(function(resp) {
+            if (resp.error) {
+                console.log(resp);
+                errorcb("Unable to create draft. Received error communicating with Gmail.");
+                return;
+            }
+
+            console.log(resp);
+
+            var labelsuccesscb = function() {
+                successcb(resp.id);
+            };
+
+            var messageId = resp.message.id;
+            GmailInterface.setMessageLabel(messageId, labelsuccesscb);
+        });
+    },
+
+    updateDraft: function(draftId, content, successcb, errorcb) {
         var draft_encoded = GmailInterface.encode("Subject: \r\n\r\n" + content);
         var request = gapi.client.gmail.users.drafts.update({
             'userId': 'me',
             'id': draftId,
-                'message': {
-                    'raw': draft_encoded
-                
+            'message': {
+                'raw': draft_encoded
             },
             'send': false
         });
@@ -158,14 +190,15 @@ var GmailInterface = {
             if (resp.error) {
                 console.log(resp);
                 errorcb("Unable to update draft. Received error communicating with Gmail.");
+                return;
             }
 
             var messageId = resp.message.id;
-            GmailInterface.setMessageLabel(messageId);
+            GmailInterface.setMessageLabel(messageId, successcb);
         });
     },
 
-    setMessageLabel: function(messageId) {
+    setMessageLabel: function(messageId, successcb) {
         // Get the labelId for Notes
         GmailInterface.getNotesLabelId(function(notesLabelId) {
             var request = gapi.client.gmail.users.messages.modify({
@@ -175,6 +208,7 @@ var GmailInterface = {
             });
 
             request.execute(function(resp) {
+                successcb();
             });
         });
     }
@@ -265,6 +299,18 @@ MyApp.controller('AuthController', function($scope, $state, $window, $timeout) {
         });
     };
 
+    $scope.newNote = function() {
+        var successcb = function(draftId) {
+            $timeout(function() {
+                $state.go('note', {'draftId': draftId});
+            });
+        };
+
+        var initial = "# New Note\n\nToday I think I will buy a boat.";
+
+        GmailInterface.createDraft(initial, successcb, $scope.displayError);
+    };
+
 });
 
 MyApp.controller('ErrorController', function($scope, $timeout) {
@@ -343,7 +389,11 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
     }
 
     $scope.updateDraft = function() {
-        GmailInterface.updateDraft($stateParams.draftId, $scope.note_data, $scope.displayError);
+        var successcb = function() {
+
+        };
+
+        GmailInterface.updateDraft($stateParams.draftId, $scope.note_data, successcb, $scope.displayError);
     };
 
     $scope.$watch('editmode', function() {
@@ -355,7 +405,7 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
     });
 
     if (!window.location.hash.endsWith("/test")) {
-        GmailInterface.getDraft($stateParams.draftId, setNote);
+        GmailInterface.getDraft($stateParams.draftId, setNote, $scope.displayError);
     } else {
         setNote("# Test note\n\nHere is a test note");
     }

@@ -135,6 +135,7 @@
       <div class="navbar">
           <div class="navbar-header">
             <a class="navbar-brand" href="#">mdnote</a>
+            <button ng-show="authorized" type="button" class="btn btn-default navbar-btn" ng-click="newNote()">+</button>
           </div>
       </div>
       <div ng-if="authorized" ui-view="notes"></div>
