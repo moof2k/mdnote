@@ -39,20 +39,37 @@ var GmailInterface = {
         return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
     },
 
-    getNotesLabelId: function(callback) {
+    getNotesLabelId: function(successcb) {
         if (GmailInterface.notesLabelId === undefined) {
-            GmailInterface.loadNotesLabelId(callback);
+            var notfoundcb = function() {
+                GmailInterface.createNotesLabelId(successcb);
+            };
+
+            GmailInterface.loadNotesLabelId(successcb, notfoundcb);
         } else {
-            callback(GmailInterface.notesLabelId);
+            successcb(GmailInterface.notesLabelId);
         }
     },
 
-    loadNotesLabelId: function(callback) {
+    createNotesLabelId: function(successcb) {
+        var request = gapi.client.gmail.users.labels.create({
+            'userId': 'me',
+            'name': 'Notes'
+        });
+
+        request.execute(function(resp) {
+            GmailInterface.notesLabelId = resp.id;
+            successcb(GmailInterface.notesLabelId);
+        });
+    },
+
+    loadNotesLabelId: function(successcb, notfoundcb) {
         var request = gapi.client.gmail.users.labels.list({
             'userId': 'me'
         });
 
         request.execute(function(resp) {
+
             for (i = 0; i < resp.labels.length; i++) {
                 var label = resp.labels[i];
 
@@ -62,7 +79,11 @@ var GmailInterface = {
                 }
             }
 
-            callback(GmailInterface.notesLabelId);
+            if (GmailInterface.notesLabelId === undefined) {
+                notfoundcb();
+            } else {
+                successcb(GmailInterface.notesLabelId);
+            }
         });
     },
  
@@ -73,7 +94,9 @@ var GmailInterface = {
         });
 
         request.execute(function(resp) {
-            callback(resp.drafts);
+            if (resp.drafts) {
+                callback(resp.drafts);
+            }
         });
     },
 
