@@ -29,6 +29,7 @@ var GmailInterface = {
 
     // Base64 decode.
     decode: function(str) {
+        str = str.replace(/\-/g, '+').replace(/_/g, '/');
         str = atob(str);
         return str;
     },
