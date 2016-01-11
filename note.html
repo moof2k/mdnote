@@ -1,26 +1,6 @@
 
 
-<div class="navbar">
-    <div class="btn-group" dropdown is-open="status.isopen">
-        <button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown">
-        <i class="fa fa-paragraph"></i> <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu editable-html" role="menu">
-        <li><a href="" ng-click="note_control.format('p')"><p>Paragraph</p></a></li>
-        <li><a href="" ng-click="note_control.format('h1')"><h1>Heading 1</h1></a></li>
-        <li><a href="" ng-click="note_control.format('h2')"><h2>Heading 2</h2></a></li>
-        <li><a href="" ng-click="note_control.format('blockquote')"><blockquote>Blockquote</blockquote></a></li>
-        <li><a href="" ng-click="note_control.format('pre')"><pre>Codeblock</pre></a></li>
-        </ul>
-    </div>
-        <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.bold()" aria-label="Bold"><i class="fa fa-bold"></i></label>
-        <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.italic()" aria-label="Italic"><i class="fa fa-italic"></i></label>
-
-        <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.unordered_list()" aria-label="Bullet List">
-            <i class="fa fa-list-ul"></i></label>
-        <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.ordered_list()" aria-label="Italic">
-            <i class="fa fa-list-ol"></i></label>
-
+<div class="navbar navbar-fixed-top">
     <div class="btn-group pull-right">
         <button type="button" class="btn btn-default navbar-btn" ng-click="updateDraft()">Save</button>
     </div>
@@ -45,7 +25,28 @@
         </div>
     </div>
     <div class="rightedit" ng-class="editmode == 'both' ? 'halfwidth' : ''" ng-show="editmode == 'right' || editmode == 'both'">
-        <div class="wysimd_container">
+        <div class="navbar navbar-aligned">
+            <div class="btn-group" dropdown is-open="status.isopen">
+                <button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown">
+                <i class="fa fa-paragraph"></i> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu editable-html" role="menu">
+                <li><a href="" ng-click="note_control.format('p')"><p>Paragraph</p></a></li>
+                <li><a href="" ng-click="note_control.format('h1')"><h1>Heading 1</h1></a></li>
+                <li><a href="" ng-click="note_control.format('h2')"><h2>Heading 2</h2></a></li>
+                <li><a href="" ng-click="note_control.format('blockquote')"><blockquote>Blockquote</blockquote></a></li>
+                <li><a href="" ng-click="note_control.format('pre')"><pre>Codeblock</pre></a></li>
+                </ul>
+            </div>
+            <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.bold()" aria-label="Bold"><i class="fa fa-bold"></i></label>
+            <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.italic()" aria-label="Italic"><i class="fa fa-italic"></i></label>
+
+            <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.unordered_list()" aria-label="Bullet List">
+                <i class="fa fa-list-ul"></i></label>
+            <label class="btn btn-default btn-s navbar-btn" ng-click="note_control.ordered_list()" aria-label="Italic">
+                <i class="fa fa-list-ol"></i></label>
+        </div>
+        <div class="rightedit_container">
             <wysimd ng-model="note_data" control="note_control" contenteditable="{{editmode != 'view'}}">
                 <center>
                     <br><br><br><br>

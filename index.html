@@ -64,13 +64,13 @@
 
       .leftedit {
         overflow-y: scroll;
-        height: calc(100vh - 65px);
+        height: 100vh;
         width: 100%;
       }
 
       .rightedit {
         overflow-y: scroll;
-        height: calc(100vh - 65px);
+        height: 100vh;
         width: 100%;
       }
 
@@ -79,9 +79,18 @@
           height: 100% !important;
       }
 
-      .wysimd_container {
+      .rightedit_container {
         max-width: 758px;
         margin: auto;
+        padding-top: 45px;
+      }
+
+      .navbar-aligned {
+        position: absolute;
+        top: 0px;
+        max-width: 758px;
+        margin: auto;
+        z-index: 1031;
       }
 
       wysimd {
