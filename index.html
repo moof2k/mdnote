@@ -16,6 +16,17 @@
       .navbar {
         margin-bottom: 0px;
         padding-right: 15px;
+        z-index: 1000;
+      }
+
+      .navbar-faded {
+        opacity: .25;
+        transition: opacity 0.5s ease;
+      }
+
+      .navbar-faded:hover {
+        opacity: 1;
+        background: white;
       }
 
       .btn {
@@ -85,12 +96,17 @@
         padding-top: 45px;
       }
 
+      .navbar-edit {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+      }
+
       .navbar-aligned {
         position: absolute;
         top: 0px;
         max-width: 758px;
         margin: auto;
-        z-index: 1031;
       }
 
       wysimd {
