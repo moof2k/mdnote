@@ -22,10 +22,16 @@
         border: 0px;
       }
 
+      .main {
+        display: flex;
+      }
+
       .leftmain {
-        width: 0px;
-        float: left;
-        opacity: 0;
+        width: 250px;
+      }
+
+      .rightmain {
+        width: calc(100vw - 250px);
       }
 
       .notesdisplay {
@@ -48,37 +54,24 @@
         font-size: 10pt;
       }
 
-      .rightmain {
-        width: 100vw;
-        float: right;
-      }
-
-      @media(min-width:768px) {
-        .leftmain {
-          width: 250px;
-          opacity: 1;
-          transition: all 0.5s ease;
-        }
-
-        .rightmain {
-          width: calc(100vw - 265px);
-          float: right;
-        }
+      .edit {
+        display: flex;
       }
 
       .halfwidth {
-        width: 50%;
+        width: 50% !important;
       }
 
       .leftedit {
-        float: left;
         overflow-y: scroll;
         height: calc(100vh - 65px);
+        width: 100%;
       }
 
       .rightedit {
         overflow-y: scroll;
         height: calc(100vh - 65px);
+        width: 100%;
       }
 
       .CodeMirror {
@@ -131,6 +124,7 @@
 
 <body ng-controller="AuthController">
 
+  <div class="main">
     <div class="leftmain">
       <div class="navbar">
           <div class="navbar-header">
@@ -159,16 +153,9 @@
         </button>
       </div>
     </div>
+  </div>
 
-    <div ng-show="error" ui-view="error"></div>
-
-    <!-- Menu Toggle Script -->
-    <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    </script>
+  <div ng-show="error" ui-view="error"></div>
 
 </body>
 
