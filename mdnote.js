@@ -419,7 +419,7 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
     $scope.note_control = {};
     $scope.editmode = 'right';
     $scope.note_data = undefined;
-    $scope.note_data_saved = undefined;
+    $scope.note_data_ls = undefined;
 
     function setNote(noteData) {
         $timeout(function() {
@@ -429,16 +429,15 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
 
     $scope.updateDraft = function() {
         var successcb = function() {
-
         };
 
         GmailInterface.updateDraft($stateParams.draftId, $scope.note_data, successcb, $scope.displayError);
     };
 
     $scope.$watch('note_data', function() {
-        if ($scope.note_data != $scope.note_data_saved) {
+        if ($scope.note_data != $scope.note_data_ls) {
             LSInterface.updateDraft($stateParams.draftId, $scope.note_data, function() {}, function() {});
-            $scope.note_data_saved = $scope.note_data;
+            $scope.note_data_ls = $scope.note_data;
         }
     });
 
