@@ -4,6 +4,13 @@ function onGapiLoaded() {
     window.init();
 }
 
+var LSInterface = {
+    updateDraft: function(draftId, content, successcb, errorcb) {
+        window.localStorage.setItem(draftId, content);
+        successcb();
+    }
+};
+
 var CLIENT_ID = '468212145523-8qedsjk185kkrobrstgtroqqs6oufjbl.apps.googleusercontent.com';
 var SCOPES = ['https://www.googleapis.com/auth/gmail.modify'];
 
@@ -412,6 +419,7 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
     $scope.note_control = {};
     $scope.editmode = 'right';
     $scope.note_data = undefined;
+    $scope.note_data_saved = undefined;
 
     function setNote(noteData) {
         $timeout(function() {
@@ -426,6 +434,13 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
 
         GmailInterface.updateDraft($stateParams.draftId, $scope.note_data, successcb, $scope.displayError);
     };
+
+    $scope.$watch('note_data', function() {
+        if ($scope.note_data != $scope.note_data_saved) {
+            LSInterface.updateDraft($stateParams.draftId, $scope.note_data, function() {}, function() {});
+            $scope.note_data_saved = $scope.note_data;
+        }
+    });
 
     $scope.$watch('editmode', function() {
 
