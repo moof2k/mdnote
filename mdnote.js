@@ -1,3 +1,32 @@
+/*
+Copyright (c) 2016 Robert W. Rose
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 function onGapiLoaded() {
 
@@ -35,7 +64,6 @@ var GmailInterface = {
             'scope': SCOPES.join(' '),
             'immediate': immediate
         }, function(authResult) {
-            console.log(authResult);
             if (authResult && !authResult.error) {
                 // load gmail client interface, then trigger callback
                 gapi.client.load('gmail', 'v1', function() {
@@ -390,6 +418,11 @@ MyApp.controller('AuthController', function($scope, $state, $window, $timeout) {
         GmailInterface.createDraft(initial, successcb, $scope.displayError);
     };
 
+    if (!$scope.authorized) {
+        $timeout(function() {
+            $state.go('init');
+        });
+    }
 });
 
 MyApp.controller('ErrorController', function($scope, $timeout) {
@@ -570,7 +603,8 @@ mdnote supports [Maruku table syntax](http://maruku.rubyforge.org/maruku.html#ex
 
 ### A note on converting between rich text and Markdown
 
-When converting from Markdown to rich text, mdnote can parse most any text that complies with classic Markdown.
+When converting from Markdown to rich text, mdnote can parse most any text that complies
+with classic Markdown.
 
 When converting from rich text to Markdown it gets a little tricky. Two reasons: Markdown
 allows for several ways to represent the same text (example: \\\`\\\`foo\\\`\\\` is equivalent
@@ -581,23 +615,33 @@ mdnote will have "sanitized" your Markdown slightly.
 `;
 
 var splashNote = `
-# **mdnote**
+# **_mdnote_**
 
 A simple note taking application for the web. Click _Login_ to get started.
 
-## Backed by Gmail
-
-All of your notes are stored and secured online in your Gmail account. Access them anytime you're online using this app or by visiting your Gmail account directly.
-
 ## A unique text editor
 
-**mdnote** employs a hybrid rich-text editor to provide both a  _[what-you-see-is-what-you-get](https://en.wikipedia.org/wiki/WYSIWYG)_ and _[Markdown](https://en.wikipedia.org/wiki/Markdown)_ text editing experience.
+mdnote uses a dual rich-text and plain-text editor to provide a real-time 
+_[what-you-see-is-what-you-get](https://en.wikipedia.org/wiki/WYSIWYG)_
+and _[Markdown](https://en.wikipedia.org/wiki/Markdown)_ text editing
+experience.
 
-Sometimes you want Markdown, sometimes you want a rich text editor. **mdnote** gives you both, simultaneously, in real-time. Try it now by clicking the panel switchers in the top-right corner.
+Sometimes you want Markdown, sometimes you want a rich text editor.
+mdnote gives you both, simultaneously, in real-time.
+
+Try it now by
+clicking the panel switchers in the top-right corner of this page.
+
+## Backed by Gmail
+
+All of your notes are stored and secured online in your Gmail account.
+Access them anytime you're online using this app or by visiting your Gmail
+account directly. mdnote does not use any proprietary file formats that lock you
+in to the platform.
 
 ## Open source, free software
 
-**mdnote** is open source and provided to you free of charge.
+mdnote is open source and provided to you free of charge.
 
-Developers: Source code is available on GitHub.
+Copyright ©2016 [Robert Rose](http://robertwrose.com). BSD license.
 `;
