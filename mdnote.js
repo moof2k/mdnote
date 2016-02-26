@@ -498,7 +498,7 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
     } else if ($scope.authorized && $stateParams.draftId === undefined) {
         setNote(userNote);
         $scope.spellcheck = false;
-        $scope.container_style = "padding-top: 125px";
+        $scope.container_style = "";
     } else {
         setNote(splashNote);
         $scope.spellcheck = false;
@@ -540,6 +540,24 @@ Headings may be controlled by prefacing a paragraph with #, ##, ### or ####.
 1. Prefix with 1.
 1. to create
     1. a numbered list
+
+### Blockquotes
+
+Prefix a paragraph with > to have it display as a blockquote.
+
+> "A blockquote example"
+>
+> --_important demonstration_
+
+### Preformatted
+
+Prefix a paragraph with four spaces to have it display as a large preformatted text block.
+
+    #include <stdio.h>
+
+    int main() {
+        ...
+    }
 
 ### Tables
 

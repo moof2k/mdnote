@@ -13,13 +13,6 @@
 </div>
 
 <div class="edit">
-    <div ng-if="note_data === undefined">
-    <center>
-      <br><br><br><br>
-      <i style="margin: auto;" class="fa fa-refresh fa-spin fa-5x"></i>
-    </center>
-    </div>
-
     <div class="leftedit" ng-class="editmode == 'both' ? 'halfwidth' : ''" ng-show="editmode == 'left' || editmode == 'both'">
         <div class="md_container">
             <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="note_data"></ui-codemirror>
@@ -48,6 +41,12 @@
                 <i class="fa fa-list-ol"></i></label>
         </div>
         <div class="rightedit_container" style="{{container_style}}">
+            <div ng-show="note_data === undefined">
+                <center>
+                  <br><br><br><br>
+                  <i style="margin: auto;" class="fa fa-refresh fa-spin fa-5x"></i>
+                </center>
+            </div>
             <wysimd ng-model="note_data" control="note_control" contenteditable="{{editmode != 'view'}}" spellcheck="{{spellcheck}}">
                 <center>
                     <br><br><br><br>
