@@ -11,6 +11,19 @@ var LSInterface = {
     }
 };
 
+function generateUUID() {
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function") {
+        d += performance.now(); //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+
 var CLIENT_ID = '468212145523-8qedsjk185kkrobrstgtroqqs6oufjbl.apps.googleusercontent.com';
 var SCOPES = ['https://www.googleapis.com/auth/gmail.modify'];
 
@@ -22,6 +35,7 @@ var GmailInterface = {
             'scope': SCOPES.join(' '),
             'immediate': immediate
         }, function(authResult) {
+            console.log(authResult);
             if (authResult && !authResult.error) {
                 // load gmail client interface, then trigger callback
                 gapi.client.load('gmail', 'v1', function() {
@@ -229,6 +243,29 @@ var GmailInterface = {
         });
     },
 
+    insertMessage: function(content, successcb, errorcb) {
+        var email = "X-Uniform-Type-Identifier: com.apple.mail-note\r\n";
+        email += "X-Universally-Unique-Identifier: " + generateUUID() + "\r\n";
+        email += "Subject: mdnote\r\n";
+        email += "\r\n";
+        email += content;
+
+        var message_encoded = GmailInterface.encode(email);
+        console.log(message_encoded);
+
+        var request = gapi.client.gmail.users.messages.insert({
+            'userId': 'me',
+            'raw': message_encoded
+        });
+
+        request.execute(function(resp) {
+            console.log(resp);
+
+            var messageId = resp.id;
+            GmailInterface.setMessageLabel(messageId, successcb);
+        });
+    },
+
     setMessageLabel: function(messageId, successcb) {
         // Get the labelId for Notes
         GmailInterface.getNotesLabelId(function(notesLabelId) {
@@ -267,6 +304,10 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
             },
             "note": {
                 template: "init note"
+            },
+            "splash": {
+                templateUrl: "note.html",
+                controller: 'NoteController'
             }
         },
     })
@@ -282,7 +323,8 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
                 controller: 'NotesController'
             },
             "note": {
-                template: "No note selected"
+                templateUrl: "note.html",
+                controller: 'NoteController'
             }
         },
     })
@@ -312,7 +354,6 @@ MyApp.controller('AuthController', function($scope, $state, $window, $timeout) {
 
     function isAuthorized(a) {
         if (a === false) {
-            $scope.displayError('Unable to access Gmail; not authorized');
         }
         $timeout(function() {
             $scope.authorized = a;
@@ -432,6 +473,7 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
         };
 
         GmailInterface.updateDraft($stateParams.draftId, $scope.note_data, successcb, $scope.displayError);
+        //GmailInterface.insertMessage($scope.note_data, successcb, $scope.displayError);
     };
 
     $scope.$watch('note_data', function() {
@@ -449,11 +491,95 @@ MyApp.controller('NoteController', function($scope, $stateParams, $timeout) {
         }, 200);
     });
 
-    if (!window.location.hash.endsWith("/test")) {
+    if ($scope.authorized && $stateParams.draftId !== undefined) {
         GmailInterface.getDraft($stateParams.draftId, setNote, $scope.displayError);
+        $scope.spellcheck = true;
+        $scope.container_style = "";
+    } else if ($scope.authorized && $stateParams.draftId === undefined) {
+        setNote(userNote);
+        $scope.spellcheck = false;
+        $scope.container_style = "padding-top: 125px";
     } else {
-        setNote("# Test note\n\nHere is a test note");
+        setNote(splashNote);
+        $scope.spellcheck = false;
+        $scope.container_style = "padding-top: 125px";
     }
 });
 
+var userNote = `
+# mdnote
 
+You're logged in. Click the + icon in the top-left to create a new note.
+
+## Markdown formatting
+
+### Font styles
+
+Surround text with \*\*asterisks\*\* to make **bold text**.
+
+Surround text with \_underscores\_ to make **italic text**.
+
+Surround text with \\\`asterisks\\\` to make \`fixed-width text\`.
+
+### Links and images
+
+Insert a link using \\[name\\]\\(url\\).
+
+Insert an image using !\\[\\]\\(url\\).
+
+### Headings
+
+Headings may be controlled by prefacing a paragraph with #, ##, ### or ####.
+
+### Lists
+
+* Prefix a paragraph with \*
+* to create
+    * a bulleted list
+
+1. Prefix with 1.
+1. to create
+    1. a numbered list
+
+### Tables
+
+mdnote supports [Maruku table syntax](http://maruku.rubyforge.org/maruku.html#extra).
+
+| Heading A | Heading B |
+|-----------|-----------|
+| Cell 1 | Cell 2|
+| Cell 3 | Cell 4 |
+
+### A note on converting between rich text and Markdown
+
+When converting from Markdown to rich text, mdnote can parse most any text that complies with classic Markdown.
+
+When converting from rich text to Markdown it gets a little tricky. Two reasons: Markdown
+allows for several ways to represent the same text (example: \\\`\\\`foo\\\`\\\` is equivalent
+to \\\`foo\\\`), and rich text (HTML) is much more expressive than Markdown. For these
+reasons mdnote follows a strict convention when converting from rich text to HTML.
+You may notice if you write in Markdown, switch to HTML, then switch back to Markdown
+mdnote will have "sanitized" your Markdown slightly.
+`;
+
+var splashNote = `
+# **mdnote**
+
+A simple note taking application for the web. Click _Login_ to get started.
+
+## Backed by Gmail
+
+All of your notes are stored and secured online in your Gmail account. Access them anytime you're online using this app or by visiting your Gmail account directly.
+
+## A unique text editor
+
+**mdnote** employs a hybrid rich-text editor to provide both a  _[what-you-see-is-what-you-get](https://en.wikipedia.org/wiki/WYSIWYG)_ and _[Markdown](https://en.wikipedia.org/wiki/Markdown)_ text editing experience.
+
+Sometimes you want Markdown, sometimes you want a rich text editor. **mdnote** gives you both, simultaneously, in real-time. Try it now by clicking the panel switchers in the top-right corner.
+
+## Open source, free software
+
+**mdnote** is open source and provided to you free of charge.
+
+Developers: Source code is available on GitHub.
+`;

@@ -42,7 +42,7 @@
       }
 
       .rightmain {
-        width: calc(100vw - 250px);
+        width: 100%;
       }
 
       .notesdisplay {
@@ -150,7 +150,7 @@
 <body ng-controller="AuthController">
 
   <div class="main">
-    <div class="leftmain">
+    <div class="leftmain" ng-show="authorized">
       <div class="navbar">
           <div class="navbar-header">
             <a class="navbar-brand" href="#">mdnote</a>
@@ -170,13 +170,7 @@
         </center>
       </div>
 
-      <div ng-if="authorized === false">
-        mdnote requires access to your Gmail account to store note data. To authorize mdnote as a Gmail application, click the Authorize button below.
-        <br><br>
-        <button ng-click="handleAuthClick()">
-          Authorize
-        </button>
-      </div>
+      <div ng-if="authorized === false" ui-view="splash"></div>
     </div>
   </div>
 
